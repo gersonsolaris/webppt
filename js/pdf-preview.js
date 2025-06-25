@@ -53,7 +53,12 @@ class PDFPagePreview {
         }
 
         try {
-            const pdfUrl = `assets/${pdfPath}`;
+            // 使用DataManager的路径处理方法
+            const pdfUrl = window.dataManager ? 
+                window.dataManager.buildFileUrl(pdfPath) : 
+                `assets/${pdfPath}`;
+                
+            console.log('加载PDF:', pdfUrl);
             const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
             const page = await pdf.getPage(pageNumber);
             

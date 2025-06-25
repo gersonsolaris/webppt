@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨平台兼容性测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        .info { background-color: #d1ecf1; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>湘潭城发集团合规网站 - 跨平台兼容性测试</h1>
+    
+    <div class="test-section info">
+        <h2>测试说明</h2>
+        <p>此页面测试文件路径处理的跨平台兼容性，确保在Windows和Linux系统上都能正常工作。</p>
+        <button onclick="runAllTests()">运行所有测试</button>
+        <button onclick="showStats()">显示统计信息</button>
+        <button onclick="debugPaths()">调试路径信息</button>
+    </div>
+    
+    <div id="testResults"></div>
+    
+    <script src="js/data.js"></script>
+    <script>
+        let dataManager;
+        
+        async function initializeDataManager() {
+            dataManager = new DataManager();
+            await dataManager.initialize();
+        }
+        
+        async function runAllTests() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '<div class="test-section info"><h2>正在运行测试...</h2></div>';
+            
+            try {
+                await initializeDataManager();
+                
+                let results = '<div class="test-section success"><h2>✅ 测试完成</h2></div>';
+                
+                // 测试1: 路径标准化
+                results += '<div class="test-section">';
+                results += '<h3>测试1: 路径标准化</h3>';
+                const pathTests = [
+                    '1.人人讲合规/2.企业首席合规官谈合规.txt',
+                    '1.人人讲合规\\\\1.董事长谈合规的宣传稿wps.txt', // Windows路径
+                    '/3.合规讲堂/3月 国有企业投资风险防控全解析 .pdf',
+                    '5.合规题库/合规考题（公司治理）.txt'
+                ];
+                
+                for (const path of pathTests) {
+                    const normalized = dataManager.normalizePath(path);
+                    const url = dataManager.buildFileUrl(path);
+                    results += `<p><strong>原始:</strong> ${path}<br><strong>标准化:</strong> ${normalized}<br><strong>URL:</strong> ${url}</p>`;
+                }
+                results += '</div>';
+                
+                // 测试2: 文件存在性检查
+                results += '<div class="test-section">';
+                results += '<h3>测试2: 文件存在性检查</h3>';
+                const files = dataManager.getPeopleComplianceArticles().slice(0, 2);
+                for (const file of files) {
+                    const exists = await dataManager.checkFileExists(file.path);
+                    const cssClass = exists ? 'success' : 'error';
+                    results += `<div class="${cssClass}"><p>${file.filename}: ${exists ? '✅ 存在' : '❌ 不存在'}</p></div>`;
+                }
+                results += '</div>';
+                
+                // 测试3: 模块文件获取
+                results += '<div class="test-section">';
+                results += '<h3>测试3: 模块文件统计</h3>';
+                const stats = dataManager.getModuleStats();
+                results += '<pre>' + JSON.stringify(stats, null, 2) + '</pre>';
+                results += '</div>';
+                
+                // 测试4: 文本文件读取
+                results += '<div class="test-section">';
+                results += '<h3>测试4: 文本文件读取测试</h3>';
+                const textFiles = dataManager.getPeopleComplianceArticles().slice(0, 1);
+                for (const file of textFiles) {
+                    const content = await dataManager.readTextFile(file.path);
+                    const preview = content.substring(0, 200) + (content.length > 200 ? '...' : '');
+                    results += `<p><strong>${file.filename}:</strong></p>`;
+                    results += `<pre>${preview}</pre>`;
+                }
+                results += '</div>';
+                
+                resultsDiv.innerHTML = results;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="test-section error"><h2>❌ 测试失败</h2><p>${error.message}</p></div>`;
+            }
+        }
+        
+        async function showStats() {
+            if (!dataManager) await initializeDataManager();
+            const stats = dataManager.getModuleStats();
+            alert('模块统计:\\n' + JSON.stringify(stats, null, 2));
+        }
+        
+        async function debugPaths() {
+            if (!dataManager) await initializeDataManager();
+            dataManager.debugPaths();
+            alert('调试信息已输出到控制台，请按F12查看');
+        }
+        
+        // 页面加载完成后自动运行测试
+        window.addEventListener('load', runAllTests);
+    </script>
+</body>
+</html>

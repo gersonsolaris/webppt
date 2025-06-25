@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路径测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>跨平台路径处理测试</h1>
+    <div id="testResults"></div>
+    
+    <script src="js/data.js"></script>
+    <script>
+        async function runPathTests() {
+            const dataManager = new DataManager();
+            await dataManager.initialize();
+            
+            const testCases = [
+                '1.人人讲合规/2.企业首席合规官谈合规.txt',
+                '1.人人讲合规\\1.董事长谈合规的宣传稿wps.txt', // Windows风格路径
+                '3.合规讲堂/3月 国有企业投资风险防控全解析 .pdf',
+                '/5.合规题库/合规考题（公司治理）.txt', // 带前导斜杠
+            ];
+            
+            const resultsDiv = document.getElementById('testResults');
+            
+            for (const testPath of testCases) {
+                try {
+                    const normalizedPath = dataManager.normalizePath(testPath);
+                    const fileUrl = dataManager.buildFileUrl(testPath);
+                    const exists = await dataManager.checkFileExists(testPath);
+                    
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = `test-result ${exists ? 'success' : 'error'}`;
+                    resultDiv.innerHTML = `
+                        <strong>原始路径:</strong> ${testPath}<br>
+                        <strong>标准化路径:</strong> ${normalizedPath}<br>
+                        <strong>文件URL:</strong> ${fileUrl}<br>
+                        <strong>文件存在:</strong> ${exists ? '✅' : '❌'}
+                    `;
+                    resultsDiv.appendChild(resultDiv);
+                } catch (error) {
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'test-result error';
+                    resultDiv.innerHTML = `
+                        <strong>路径:</strong> ${testPath}<br>
+                        <strong>错误:</strong> ${error.message}
+                    `;
+                    resultsDiv.appendChild(resultDiv);
+                }
+            }
+        }
+        
+        runPathTests();
+    </script>
+</body>
+</html>
