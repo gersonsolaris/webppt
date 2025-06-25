@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>板块测试</title>
+    <style>
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 20px;
+        }
+        .module-card {
+            background: white;
+            border: 2px solid #333;
+            padding: 20px;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .small-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .small-card {
+            background: lightblue;
+            border: 1px solid #666;
+            padding: 15px;
+            text-align: center;
+            min-height: 80px;
+        }
+    </style>
+</head>
+<body>
+    <h1>板块布局测试</h1>
+    <div class="test-grid">
+        <!-- 左列：板块1 -->
+        <div class="module-card">
+            <h3>板块1: 人人讲合规</h3>
+            <p>署名文章</p>
+        </div>
+        
+        <!-- 中列：板块3 -->
+        <div class="module-card">
+            <h3>板块3: 合规讲堂</h3>
+            <p>合规PPT内容</p>
+        </div>
+        
+        <!-- 右列：板块6、2、5、4 -->
+        <div class="small-cards">
+            <div class="small-card">
+                <h4>板块6: 规行致远</h4>
+                <p>新闻稿</p>
+            </div>
+            <div class="small-card">
+                <h4>板块2: 合规速递</h4>
+                <p>合规政策法规</p>
+            </div>
+            <div class="small-card">
+                <h4>板块5: 合规题库</h4>
+                <p>合规试题</p>
+            </div>
+            <div class="small-card" style="background: yellow;">
+                <h4>板块4: 城发动态</h4>
+                <p>集团官网</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

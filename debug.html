@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>调试版本 - 湘潭城发集团合规宣传</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        .main-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            height: 500px;
+        }
+        .left-column, .center-column {
+            display: flex;
+            flex-direction: column;
+        }
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .large-card {
+            height: 100%;
+            background: white;
+            border: 2px solid blue;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        .small-card {
+            flex: 1;
+            background: white;
+            border: 2px solid red;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .debug-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: yellow;
+            padding: 10px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info">
+        <strong>调试信息：</strong><br>
+        所有6个板块应该可见
+    </div>
+
+    <h1>湘潭城发集团合规宣传 - 调试版本</h1>
+    
+    <div class="main-content-grid">
+        <!-- 左侧区域：板块1 -->
+        <div class="left-column">
+            <div class="large-card">
+                <h3>1. 人人讲合规</h3>
+                <p>署名文章</p>
+            </div>
+        </div>
+
+        <!-- 中间区域：板块3 -->
+        <div class="center-column">
+            <div class="large-card">
+                <h3>3. 合规讲堂</h3>
+                <p>合规PPT内容</p>
+            </div>
+        </div>
+
+        <!-- 右侧区域：板块6、2、5、4 -->
+        <div class="right-column">
+            <div class="small-card" style="border-color: green;">
+                <h3>6. 规行致远</h3>
+                <p>新闻稿</p>
+            </div>
+
+            <div class="small-card" style="border-color: orange;">
+                <h3>2. 合规速递</h3>
+                <p>合规政策法规</p>
+            </div>
+
+            <div class="small-card" style="border-color: purple;">
+                <h3>5. 合规题库</h3>
+                <p>合规试题</p>
+            </div>
+
+            <div class="small-card" style="border-color: red; background: yellow;">
+                <h3>4. 城发动态</h3>
+                <p>集团官网链接</p>
+                <p><strong>这是第4个板块！</strong></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

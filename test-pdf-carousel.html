@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF轮播测试页面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+        }
+        
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .test-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        
+        .test-content {
+            padding: 15px;
+            height: 300px;
+            display: flex;
+            align-items: stretch;
+        }
+        
+        .pdf-preview-test {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .preview-placeholder {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .controls {
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+        
+        .btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #3a8bfe;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h2>PDF页面轮播测试</h2>
+            <p>测试PDF页面在容器中的填充效果</p>
+        </div>
+        
+        <div class="test-content">
+            <div class="pdf-preview-test" id="previewContainer">
+                <div class="preview-placeholder">
+                    <p>点击下方按钮测试PDF渲染效果</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="testPDFRendering()">测试PDF渲染</button>
+            <button class="btn" onclick="testStaticPreview()">测试静态预览</button>
+            <button class="btn" onclick="clearPreview()">清除预览</button>
+        </div>
+    </div>
+
+    <script>
+        // 配置PDF.js
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+
+        async function testPDFRendering() {
+            const container = document.getElementById('previewContainer');
+            container.innerHTML = '<div class="preview-placeholder"><p>正在渲染PDF...</p></div>';
+
+            try {
+                // 测试渲染第一个可用的PDF
+                const pdfUrl = 'assets/3.合规讲堂/6月 湘潭城发合规体系建设讲座-.pdf';
+                const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+                const page = await pdf.getPage(1);
+                
+                // 计算缩放比例以填满容器
+                const containerWidth = 570;
+                const containerHeight = 270;
+                
+                const viewport = page.getViewport({ scale: 1.0 });
+                const scaleX = containerWidth / viewport.width;
+                const scaleY = containerHeight / viewport.height;
+                const scale = Math.max(scaleX, scaleY);
+                
+                const scaledViewport = page.getViewport({ scale });
+                
+                // 创建canvas
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = scaledViewport.width;
+                canvas.height = scaledViewport.height;
+                
+                // 渲染页面
+                await page.render({
+                    canvasContext: context,
+                    viewport: scaledViewport
+                }).promise;
+                
+                // 转换为图片并显示
+                const imageData = canvas.toDataURL('image/jpeg', 0.8);
+                container.innerHTML = `<img src="${imageData}" alt="PDF预览" class="preview-image">`;
+                
+            } catch (error) {
+                console.error('PDF渲染失败:', error);
+                container.innerHTML = '<div class="preview-placeholder"><p>PDF渲染失败，请检查文件路径</p></div>';
+            }
+        }
+
+        function testStaticPreview() {
+            const container = document.getElementById('previewContainer');
+            container.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; flex-direction: column; height: 100%; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; text-align: center; width: 100%;">
+                    <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.8;">📊</div>
+                    <div>
+                        <h5 style="margin: 0 0 8px 0; color: #333; font-weight: 600;">合规体系建设讲座</h5>
+                        <p style="margin: 0; color: #666; font-size: 0.9rem;">第1页</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function clearPreview() {
+            const container = document.getElementById('previewContainer');
+            container.innerHTML = '<div class="preview-placeholder"><p>预览已清除</p></div>';
+        }
+    </script>
+</body>
+</html>

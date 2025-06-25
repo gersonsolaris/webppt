@@ -99,17 +99,29 @@ body {
 .header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 30px 50px;
+    padding: 20px 30px;
     text-align: center;
     position: relative;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+}
+
 .logo-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.title-container {
+    flex: 1;
+    text-align: left;
 }
 
 .logo {
@@ -139,20 +151,123 @@ body {
 /* 内容区域 */
 .content-area {
     flex: 1;
-    padding: 40px;
+    padding: 15px; /* 减少padding，让板块面积更大 */
     display: flex;
     flex-direction: column;
-    gap: 40px;
 }
 
-/* 轮播展示区 */
-.carousel-section {
+/* 新的主内容网格布局 */
+.main-content-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    height: 300px;
+    grid-template-columns: 1fr 1fr 1fr; /* 左1/3(板块1) 中1/3(板块3) 右1/3(板块6/2/5/4) */
+    gap: 10px; /* 进一步减少间隔 */
+    flex: 1; /* 使用flex而不是固定高度 */
+    min-height: 600px; /* 增加最小高度确保所有内容可见 */
 }
 
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6px; /* 小卡片之间的间隔 */
+}
+
+.center-column,
+.right-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 大卡片样式 (板块1和3) */
+.large-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+}
+
+.large-card .card-header {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.large-card .card-header h3 {
+    margin: 10px 0 5px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.large-card .card-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+.large-card .card-content {
+    flex: 1;
+    padding: 15px;
+    overflow: hidden;
+}
+
+/* 小卡片样式 (板块6、2、5、4) */
+.small-card {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 110px; /* 稍微减少最小高度，让间隔效果更明显 */
+}
+
+.small-card .module-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+}
+
+.small-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #333;
+}
+
+.small-card p {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 300;
+    margin: 0;
+}
+
+/* 卡片悬停效果 */
+.large-card:hover,
+.small-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.small-card:hover .module-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+/* 旧的轮播和模块样式 - 已替换为新布局
 .ppt-carousel,
 .article-carousel {
     background: white;
@@ -160,6 +275,8 @@ body {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .ppt-carousel:hover,
@@ -167,6 +284,7 @@ body {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
+*/
 
 .carousel-header {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -209,15 +327,23 @@ body {
 
 .slide-indicator {
     font-size: 0.9rem;
-    min-width: 50px;
+    min-width: 60px;
     text-align: center;
 }
 
 .carousel-content {
-    padding: 20px;
+    padding: 15px;
     height: calc(100% - 60px);
     overflow: hidden;
     position: relative;
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+}
+
+.ppt-carousel .carousel-content,
+.article-carousel .carousel-content {
+    min-height: 240px; /* 确保轮播区域有固定的最小高度 */
 }
 
 .slide-placeholder {
@@ -229,7 +355,138 @@ body {
     font-style: italic;
 }
 
-/* 功能模块区域 */
+/* 内联轮播样式 */
+.article-carousel-inline,
+.ppt-carousel-inline {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.carousel-header-inline {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 5px;
+}
+
+.carousel-controls-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.carousel-controls-inline .carousel-btn {
+    background: rgba(79, 172, 254, 0.2);
+    border: none;
+    color: #4facfe;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.carousel-controls-inline .carousel-btn:hover {
+    background: rgba(79, 172, 254, 0.3);
+    transform: scale(1.1);
+}
+
+.carousel-controls-inline .slide-indicator {
+    font-size: 0.85rem;
+    color: #666;
+    min-width: 45px;
+    text-align: center;
+}
+
+.carousel-content-inline {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+    background: #f8f9fa;
+    aspect-ratio: 4/3; /* 640x480的宽高比 */
+    min-height: 240px; /* 确保有足够的显示空间 */
+}
+
+/* 内联轮播内容样式 */
+.carousel-content-inline .article-slide {
+    height: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.carousel-content-inline .article-slide h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 8px;
+}
+
+.carousel-content-inline .article-preview {
+    flex: 1;
+    overflow: hidden;
+    line-height: 1.5;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.carousel-content-inline .read-more-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    align-self: flex-start;
+    font-size: 0.8rem;
+    margin-top: 10px;
+}
+
+.carousel-content-inline .read-more-btn:hover {
+    transform: scale(1.05);
+}
+
+/* PDF轮播内联样式 */
+.carousel-content-inline .pdf-page-slide {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+}
+
+.carousel-content-inline .pdf-page-container {
+    flex: 1;
+    min-height: 160px;
+}
+
+.carousel-content-inline .pdf-page-info {
+    min-height: 50px;
+    padding: 0;
+}
+
+.carousel-content-inline .pdf-page-info h4 {
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+}
+
+.carousel-content-inline .pdf-page-info p {
+    font-size: 0.75rem;
+    margin-bottom: 5px;
+}
+
+/* 旧的功能模块样式 - 已替换为新布局
 .modules-section {
     flex: 1;
 }
@@ -257,6 +514,7 @@ body {
     align-items: center;
     min-height: 180px;
 }
+*/
 
 .module-card::before {
     content: '';
@@ -367,53 +625,100 @@ body {
 }
 
 /* 模块特定颜色 */
-.module-card[data-module="1"]:hover {
+.large-card[data-module="1"] .card-header {
     background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-    color: white;
 }
 
-.module-card[data-module="2"]:hover {
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    color: white;
+.large-card[data-module="3"] .card-header {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.module-card[data-module="3"]:hover {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-    color: white;
-}
-
-.module-card[data-module="4"]:hover {
-    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
-    color: white;
-}
-
-.module-card[data-module="5"]:hover {
-    background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
-    color: white;
-}
-
-.module-card[data-module="6"]:hover {
+.small-card[data-module="6"]:hover {
     background: linear-gradient(135deg, #e3ffe7 0%, #d9e7ff 100%);
     color: #333;
 }
 
+.small-card[data-module="2"]:hover {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    color: white;
+}
+
+.small-card[data-module="5"]:hover {
+    background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+    color: white;
+}
+
+.small-card[data-module="4"]:hover {
+    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+    color: white;
+}
+
 /* 响应式设计 */
-@media (max-width: 1400px) {
-    .presentation-container {
-        margin: 20px;
-        width: calc(100vw - 40px);
-        height: calc(100vh - 40px);
+@media (max-width: 1200px) {
+    .main-content-grid {
+        grid-template-columns: 1fr 1fr 1fr; /* 保持三等分 */
+        gap: 8px; /* 进一步减少间隔 */
+    }
+    
+    .large-card .card-header {
+        padding: 15px;
+    }
+    
+    .large-card .card-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .small-card {
+        padding: 15px;
+        min-height: 95px; /* 减少高度 */
+    }
+    
+    .small-card .module-icon {
+        font-size: 2rem;
+    }
+    
+    .right-column {
+        gap: 5px; /* 在中等屏幕上进一步减少间隔 */
     }
 }
 
-@media (max-width: 1024px) {
-    .carousel-section {
+@media (max-width: 768px) {
+    .main-content-grid {
         grid-template-columns: 1fr;
+        gap: 10px; /* 减少移动端间隔 */
         height: auto;
     }
     
-    .modules-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .left-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px; /* 减少移动端板块间隔 */
+    }
+    
+    .large-card {
+        min-height: 300px;
+    }
+    
+    .content-area {
+        padding: 12px; /* 减少移动端padding */
+    }
+    
+    .header {
+        padding: 15px 20px; /* 减少header的padding */
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .title-container {
+        text-align: center;
+    }
+    
+    .logo-container {
+        gap: 10px; /* 减少logo间隔 */
     }
     
     .main-title {
@@ -421,22 +726,56 @@ body {
     }
 }
 
-@media (max-width: 768px) {
-    .modules-grid {
-        grid-template-columns: 1fr;
+@media (max-width: 480px) {
+    .content-area {
+        padding: 8px; /* 超小屏幕下进一步减少padding */
+    }
+    
+    .main-content-grid {
+        gap: 8px;
+    }
+    
+    .right-column {
+        gap: 6px; /* 超小屏幕下的最小间隔 */
+    }
+    
+    .small-card {
+        padding: 12px;
+        min-height: 80px;
+    }
+    
+    .small-card .module-icon {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+    
+    .small-card h3 {
+        font-size: 1rem;
+    }
+    
+    .small-card p {
+        font-size: 0.85rem;
     }
     
     .header {
-        padding: 20px 30px;
+        padding: 12px 15px;
     }
     
-    .content-area {
-        padding: 30px;
-    }
-    
-    .logo-container {
+    .header-content {
         flex-direction: column;
-        gap: 15px;
+        gap: 10px;
+    }
+    
+    .title-container {
+        text-align: center;
+    }
+    
+    .main-title {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
     }
 }
 
@@ -710,4 +1049,267 @@ body {
     margin: 10px 0;
     border-radius: 5px;
     font-weight: 500;
+}
+
+/* PDF页面轮播样式 */
+.pdf-page-slide {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pdf-page-container {
+    flex: 1;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8f9fa;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-height: 180px; /* 确保容器有最小高度 */
+    display: flex;
+    align-items: stretch;
+}
+
+.pdf-page-image {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.pdf-page-image iframe {
+    border-radius: 8px;
+    background: white;
+    width: 100%;
+    height: 100%;
+}
+
+.pdf-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #666;
+    font-size: 1.2rem;
+    background: #f8f9fa;
+}
+
+.pdf-page-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pdf-page-container:hover .pdf-page-overlay {
+    opacity: 1;
+}
+
+.view-full-pdf-btn {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.view-full-pdf-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.pdf-page-info {
+    padding: 0 5px;
+    flex-shrink: 0;
+    min-height: 60px;
+}
+
+.pdf-page-info h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+    line-height: 1.2;
+}
+
+.pdf-page-info p {
+    color: #666;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.page-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 4px;
+    background: #e9ecef;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.page-indicator {
+    font-size: 0.8rem;
+    color: #666;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* PDF预览相关样式 */
+.pdf-page-preview-container {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    display: flex;
+    align-items: stretch;
+}
+
+.pdf-page-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdf-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 确保图片覆盖整个容器 */
+    object-position: center; /* 居中显示 */
+    border-radius: 8px;
+    display: block;
+}
+
+.pdf-preview-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.page-badge {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.pdf-static-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    text-align: center;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.static-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.static-info h5 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.static-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.pdf-fallback-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    color: #666;
+    box-sizing: border-box;
+}
+
+.fallback-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    opacity: 0.6;
+}
+
+.pdf-preview-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    color: #666;
+    box-sizing: border-box;
+}
+
+.loading-spinner-small {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(79, 172, 254, 0.3);
+    border-top: 2px solid #4facfe;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+.pdf-page-preview-container {
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8f9fa;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+}
+
+/* 模块内的logo图片样式 */
+.module-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo:hover {
+    transform: scale(1.05);
 }

@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
     <!-- 背景动态元素 -->
@@ -22,68 +23,36 @@
     <div class="presentation-container">
         <!-- 标题栏 -->
         <header class="header">
-            <div class="logo-container">
-                <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
-                <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo">
+                    <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo">
+                </div>
+                <div class="title-container">
+                    <h1 class="main-title">湘潭城乡建设发展集团有限公司</h1>
+                    <p class="subtitle">规行致远</p>
+                </div>
             </div>
-            <h1 class="main-title">湘潭城发集团合规宣传</h1>
-            <p class="subtitle">规行致远 · 合规经营</p>
         </header>
 
         <!-- 内容展示区域 -->
         <main class="content-area">
-            <!-- 轮播展示区 -->
-            <div class="carousel-section">
-                <!-- PPT页面轮播 -->
-                <div class="ppt-carousel">
-                    <div class="carousel-header">
-                        <h3>合规讲堂精选</h3>
-                        <div class="carousel-controls">
-                            <button class="carousel-btn prev-btn" onclick="prevSlide('ppt')">&lt;</button>
-                            <span class="slide-indicator" id="pptIndicator">1 / 10</span>
-                            <button class="carousel-btn next-btn" onclick="nextSlide('ppt')">&gt;</button>
+            <!-- 主要内容区域 -->
+            <div class="main-content-grid">
+                <!-- 左侧区域：其他版块（6、2、5、4） -->
+                <div class="left-column">
+                    <div class="module-card small-card" data-module="6" onclick="navigateToModule('news-archive')">
+                        <div class="module-icon">
+                            <img src="assets/logo/合规LOGO.png" alt="规行致远" class="module-logo">
                         </div>
-                    </div>
-                    <div class="carousel-content" id="pptCarousel">
-                        <!-- PPT内容将通过JavaScript动态加载 -->
-                        <div class="slide-placeholder">
-                            <p>正在加载合规讲堂内容...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 文章轮播 -->
-                <div class="article-carousel">
-                    <div class="carousel-header">
-                        <h3>人人讲合规</h3>
-                        <div class="carousel-controls">
-                            <button class="carousel-btn prev-btn" onclick="prevSlide('article')">&lt;</button>
-                            <span class="slide-indicator" id="articleIndicator">1 / 2</span>
-                            <button class="carousel-btn next-btn" onclick="nextSlide('article')">&gt;</button>
-                        </div>
-                    </div>
-                    <div class="carousel-content" id="articleCarousel">
-                        <!-- 文章内容将通过JavaScript动态加载 -->
-                        <div class="slide-placeholder">
-                            <p>正在加载合规文章...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 六个功能板块 -->
-            <div class="modules-section">
-                <div class="modules-grid">
-                    <div class="module-card" data-module="1" onclick="navigateToModule('people-compliance')">
-                        <div class="module-icon">📝</div>
-                        <h3>人人讲合规</h3>
-                        <p>署名文章</p>
+                        <h3>规行致远</h3>
+                        <p>新闻稿</p>
                         <div class="module-overlay">
                             <span>点击查看</span>
                         </div>
                     </div>
 
-                    <div class="module-card" data-module="2" onclick="navigateToModule('compliance-express')">
+                    <div class="module-card small-card" data-module="2" onclick="navigateToModule('compliance-express')">
                         <div class="module-icon">📋</div>
                         <h3>合规速递</h3>
                         <p>合规政策法规</p>
@@ -92,25 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="module-card" data-module="3" onclick="navigateToModule('compliance-lecture')">
-                        <div class="module-icon">🎓</div>
-                        <h3>合规讲堂</h3>
-                        <p>合规PPT内容</p>
-                        <div class="module-overlay">
-                            <span>点击查看</span>
-                        </div>
-                    </div>
-
-                    <div class="module-card" data-module="4" onclick="navigateToOfficial()">
-                        <div class="module-icon">🏢</div>
-                        <h3>城发动态</h3>
-                        <p>集团官网</p>
-                        <div class="module-overlay">
-                            <span>跳转官网</span>
-                        </div>
-                    </div>
-
-                    <div class="module-card" data-module="5" onclick="navigateToModule('compliance-quiz')">
+                    <div class="module-card small-card" data-module="5" onclick="navigateToModule('compliance-quiz')">
                         <div class="module-icon">❓</div>
                         <h3>合规题库</h3>
                         <p>合规试题</p>
@@ -119,12 +70,72 @@
                         </div>
                     </div>
 
-                    <div class="module-card" data-module="6" onclick="navigateToModule('news-archive')">
-                        <div class="module-icon">📰</div>
-                        <h3>规行致远</h3>
-                        <p>新闻稿</p>
+                    <div class="module-card small-card" data-module="4" onclick="navigateToOfficial()">
+                        <div class="module-icon">🏢</div>
+                        <h3>城发动态</h3>
+                        <p>集团官网</p>
                         <div class="module-overlay">
-                            <span>点击查看</span>
+                            <span>跳转官网</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中间区域：板块1 人人讲合规 -->
+                <div class="center-column">
+                    <div class="module-card large-card" data-module="1" onclick="navigateToModule('people-compliance')">
+                        <div class="card-header">
+                            <div class="module-icon">📝</div>
+                            <h3>人人讲合规</h3>
+                        </div>
+                        <div class="card-content">
+                            <!-- 文章轮播 -->
+                            <div class="article-carousel-inline">
+                                <div class="carousel-header-inline">
+                                    <div class="carousel-controls-inline">
+                                        <button class="carousel-btn prev-btn" onclick="event.stopPropagation(); prevSlide('article')">&lt;</button>
+                                        <span class="slide-indicator" id="articleIndicator">1 / 2</span>
+                                        <button class="carousel-btn next-btn" onclick="event.stopPropagation(); nextSlide('article')">&gt;</button>
+                                    </div>
+                                </div>
+                                <div class="carousel-content-inline" id="articleCarousel">
+                                    <div class="slide-placeholder">
+                                        <p>正在加载合规文章...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="module-overlay">
+                            <span>点击查看更多</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧区域：板块3 合规讲堂 -->
+                <div class="right-column">
+                    <div class="module-card large-card" data-module="3" onclick="navigateToModule('compliance-lecture')">
+                        <div class="card-header">
+                            <div class="module-icon">🎓</div>
+                            <h3>合规讲堂</h3>
+                        </div>
+                        <div class="card-content">
+                            <!-- PPT页面轮播 -->
+                            <div class="ppt-carousel-inline">
+                                <div class="carousel-header-inline">
+                                    <div class="carousel-controls-inline">
+                                        <button class="carousel-btn prev-btn" onclick="event.stopPropagation(); prevSlide('ppt')">&lt;</button>
+                                        <span class="slide-indicator" id="pptIndicator">1 / 10</span>
+                                        <button class="carousel-btn next-btn" onclick="event.stopPropagation(); nextSlide('ppt')">&gt;</button>
+                                    </div>
+                                </div>
+                                <div class="carousel-content-inline" id="pptCarousel">
+                                    <div class="slide-placeholder">
+                                        <p>正在加载合规讲堂内容...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="module-overlay">
+                            <span>点击查看更多</span>
                         </div>
                     </div>
                 </div>
@@ -141,6 +152,7 @@
     </div>
 
     <script src="js/data.js"></script>
+    <script src="js/pdf-preview.js"></script>
     <script src="js/carousel.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/main.js"></script>

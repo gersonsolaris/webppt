@@ -11,6 +11,9 @@ class App {
             // 显示加载动画
             this.showLoadingAnimation();
             
+            // 初始化PDF.js
+            this.initializePDFJS();
+            
             // 初始化各个管理器
             await window.dataManager.initialize();
             await window.carouselManager.initialize();
@@ -26,6 +29,16 @@ class App {
         } catch (error) {
             console.error('应用初始化失败:', error);
             this.showErrorMessage('系统初始化失败，请刷新页面重试');
+        }
+    }
+
+    initializePDFJS() {
+        // 配置PDF.js
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            console.log('PDF.js 初始化完成');
+        } else {
+            console.warn('PDF.js 加载失败，将使用静态预览');
         }
     }
 
