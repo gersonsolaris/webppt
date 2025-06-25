@@ -16,6 +16,7 @@ def collect_office_files(base_dir, output_json="office_files.json"):
     supported_extensions = {
         # '.pptx', '.ppt',  # PowerPoint
         ".pdf",  # PDF
+        ".txt",  # Text files
         # '.wps', '.wpt',   # WPS Writer
         # '.et', '.ett',    # WPS Spreadsheet
         # '.dps', '.dpt',   # WPS Presentation
