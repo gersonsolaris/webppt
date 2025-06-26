@@ -375,6 +375,8 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    position: relative;
+    z-index: 10;
 }
 
 .carousel-controls-inline .carousel-btn {
@@ -391,6 +393,9 @@ body {
     transition: all 0.3s ease;
     font-weight: bold;
     font-size: 0.9rem;
+    position: relative;
+    z-index: 20;
+    pointer-events: auto;
 }
 
 .carousel-controls-inline .carousel-btn:hover {
@@ -576,10 +581,69 @@ body {
     font-weight: 500;
     font-size: 1.1rem;
     z-index: 2;
+    pointer-events: none;
 }
 
 .module-card:hover .module-overlay {
     opacity: 1;
+    pointer-events: auto;
+}
+
+/* 当鼠标悬停在卡片内容区域时，不显示overlay */
+.module-card .card-content:hover ~ .module-overlay {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* 当鼠标悬停在轮播控件时，不显示overlay */
+.module-card .carousel-header-inline:hover ~ * .module-overlay,
+.module-card .carousel-controls-inline:hover ~ * .module-overlay {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* 确保轮播控件在 overlay 之上 */
+.carousel-header-inline {
+    position: relative;
+    z-index: 20;
+}
+
+.carousel-controls-inline {
+    position: relative;
+    z-index: 20;
+}
+
+/* 确保轮播内容区域也有足够高的z-index */
+.carousel-content-inline,
+.article-carousel-inline,
+.ppt-carousel-inline {
+    position: relative;
+    z-index: 15;
+}
+
+/* 确保卡片内容区域有足够高的z-index */
+.large-card .card-content {
+    position: relative;
+    z-index: 10;
+}
+
+.carousel-controls-inline .carousel-btn {
+    background: rgba(79, 172, 254, 0.2);
+    border: none;
+    color: #4facfe;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 20;
+    pointer-events: auto;
 }
 
 /* 页面转换效果 */

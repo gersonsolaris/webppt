@@ -92,9 +92,9 @@
                             <div class="article-carousel-inline">
                                 <div class="carousel-header-inline">
                                     <div class="carousel-controls-inline">
-                                        <button class="carousel-btn prev-btn" onclick="event.stopPropagation(); prevSlide('article')">&lt;</button>
+                                        <button class="carousel-btn prev-btn" onclick="event.stopPropagation(); event.preventDefault(); prevSlide('article'); return false;">&lt;</button>
                                         <span class="slide-indicator" id="articleIndicator">1 / 2</span>
-                                        <button class="carousel-btn next-btn" onclick="event.stopPropagation(); nextSlide('article')">&gt;</button>
+                                        <button class="carousel-btn next-btn" onclick="event.stopPropagation(); event.preventDefault(); nextSlide('article'); return false;">&gt;</button>
                                     </div>
                                 </div>
                                 <div class="carousel-content-inline" id="articleCarousel">
@@ -122,9 +122,9 @@
                             <div class="ppt-carousel-inline">
                                 <div class="carousel-header-inline">
                                     <div class="carousel-controls-inline">
-                                        <button class="carousel-btn prev-btn" onclick="event.stopPropagation(); prevSlide('ppt')">&lt;</button>
+                                        <button class="carousel-btn prev-btn" onclick="event.stopPropagation(); event.preventDefault(); prevSlide('ppt'); return false;">&lt;</button>
                                         <span class="slide-indicator" id="pptIndicator">1 / 10</span>
-                                        <button class="carousel-btn next-btn" onclick="event.stopPropagation(); nextSlide('ppt')">&gt;</button>
+                                        <button class="carousel-btn next-btn" onclick="event.stopPropagation(); event.preventDefault(); nextSlide('ppt'); return false;">&gt;</button>
                                     </div>
                                 </div>
                                 <div class="carousel-content-inline" id="pptCarousel">

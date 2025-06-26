@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, shell, dialog, ipcMain, protocol } = require('electron');
+const { app, BrowserWindow, Menu, shell, dialog, ipcMain, protocol, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -100,6 +100,30 @@ function createWindow() {
   // 窗口关闭时触发
   mainWindow.on('closed', () => {
     mainWindow = null;
+    // 清理全局快捷键
+    globalShortcut.unregisterAll();
+  });
+
+  // 注册全局快捷键
+  globalShortcut.register('Ctrl+Shift+F', () => {
+    if (mainWindow && !mainWindow.isFullScreen()) {
+      mainWindow.setFullScreen(true);
+    }
+  });
+
+  globalShortcut.register('Ctrl+Shift+Q', () => {
+    if (mainWindow && mainWindow.isFullScreen()) {
+      mainWindow.setFullScreen(false);
+    }
+  });
+
+  // 监听全屏状态变化
+  mainWindow.on('enter-full-screen', () => {
+    console.log('进入全屏模式');
+  });
+
+  mainWindow.on('leave-full-screen', () => {
+    console.log('退出全屏模式');
   });
 
   // 设置窗口标题
@@ -169,6 +193,25 @@ function createMenu() {
             if (mainWindow) {
               const currentZoom = mainWindow.webContents.getZoomLevel();
               mainWindow.webContents.setZoomLevel(currentZoom - 0.5);
+            }
+          }
+        },
+        { type: 'separator' },
+        {
+          label: '进入全屏',
+          accelerator: 'Ctrl+Shift+F',
+          click: () => {
+            if (mainWindow) {
+              mainWindow.setFullScreen(true);
+            }
+          }
+        },
+        {
+          label: '退出全屏',
+          accelerator: 'Ctrl+Shift+Q',
+          click: () => {
+            if (mainWindow) {
+              mainWindow.setFullScreen(false);
             }
           }
         },
