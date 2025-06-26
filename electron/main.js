@@ -1,9 +1,39 @@
-const { app, BrowserWindow, Menu, shell, dialog, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, shell, dialog, ipcMain, protocol } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
 // 保持对窗口对象的全局引用，避免垃圾回收
 let mainWindow;
+
+// 获取资源路径
+function getResourcePath(resourcePath) {
+  if (app.isPackaged) {
+    // 生产环境：assets目录在应用根目录
+    return path.join(process.resourcesPath, '..', resourcePath);
+  } else {
+    // 开发环境：assets目录在项目根目录
+    return path.join(__dirname, '..', resourcePath);
+  }
+}
+
+// 注册自定义协议来处理静态资源
+function setupProtocol() {
+  protocol.registerFileProtocol('app-assets', (request, callback) => {
+    // 从 app-assets://path 提取路径
+    const relativePath = decodeURIComponent(request.url.replace('app-assets://', ''));
+    const filePath = getResourcePath(relativePath);
+    
+    console.log(`协议请求: ${request.url} -> ${filePath}`);
+    
+    // 检查文件是否存在
+    if (fs.existsSync(filePath)) {
+      callback({ path: filePath });
+    } else {
+      console.error(`文件不存在: ${filePath}`);
+      callback({ error: -6 }); // FILE_NOT_FOUND
+    }
+  });
+}
 
 // 创建主窗口
 function createWindow() {
@@ -179,6 +209,9 @@ function createMenu() {
 
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.whenReady().then(() => {
+  // 先注册自定义协议
+  setupProtocol();
+  
   createWindow();
   createMenu();
 
@@ -222,4 +255,16 @@ ipcMain.handle('get-app-info', () => {
     version: app.getVersion(),
     path: app.getAppPath()
   };
+});
+
+// 获取资源文件路径
+ipcMain.handle('get-resource-path', (event, resourcePath) => {
+  const fullPath = getResourcePath(resourcePath);
+  return `file://${fullPath}`;
+});
+
+// 检查文件是否存在
+ipcMain.handle('file-exists', (event, filePath) => {
+  const fullPath = getResourcePath(filePath);
+  return fs.existsSync(fullPath);
 });

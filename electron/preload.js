@@ -5,6 +5,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 获取应用信息
   getAppInfo: () => ipcRenderer.invoke('get-app-info'),
   
+  // 获取资源文件路径
+  getResourcePath: (resourcePath) => ipcRenderer.invoke('get-resource-path', resourcePath),
+  
+  // 检查文件是否存在
+  fileExists: (filePath) => ipcRenderer.invoke('file-exists', filePath),
+  
   // 平台信息
   platform: process.platform,
   
@@ -16,26 +22,39 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   // 检查是否运行在Electron环境
-  isElectron: true
+  isElectron: true,
+  
+  // 转换assets路径为app-assets协议
+  convertAssetsPath: (path) => {
+    if (path.startsWith('assets/')) {
+      return `app-assets://${path}`;
+    }
+    return path;
+  }
 });
 
-// 优化加载性能
+// 页面加载完成后替换所有assets路径
 window.addEventListener('DOMContentLoaded', () => {
-  // 添加Electron特定的类名，便于CSS样式调整
-  document.body.classList.add('electron-app');
+  console.log('Electron预加载脚本执行 - 替换assets路径');
   
-  // 禁用右键菜单（可选）
-  // document.addEventListener('contextmenu', (e) => e.preventDefault());
-  
-  // 禁用拖拽文件到窗口
-  document.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  // 替换所有img标签的src属性
+  const images = document.querySelectorAll('img[src^="assets/"]');
+  images.forEach(img => {
+    const originalSrc = img.src;
+    const newSrc = `app-assets://${img.getAttribute('src')}`;
+    img.src = newSrc;
+    console.log(`图片路径替换: ${originalSrc} -> ${newSrc}`);
   });
   
-  document.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  // 替换所有CSS背景图片（如果有的话）
+  const elementsWithBgImage = document.querySelectorAll('[style*="background-image"]');
+  elementsWithBgImage.forEach(el => {
+    const style = el.style.backgroundImage;
+    if (style.includes('assets/')) {
+      const newStyle = style.replace(/assets\//g, 'app-assets://assets/');
+      el.style.backgroundImage = newStyle;
+      console.log(`背景图片路径替换: ${style} -> ${newStyle}`);
+    }
   });
 });
 

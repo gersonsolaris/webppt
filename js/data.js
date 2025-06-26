@@ -4,6 +4,12 @@ class DataManager {
         this.officeFiles = null;
         this.currentModule = null;
         this.initialized = false;
+        this.isElectron = typeof window !== 'undefined' && window.electronAPI;
+    }
+
+    // 检测运行环境
+    isElectronApp() {
+        return this.isElectron;
     }
 
     // 标准化路径 - 兼容Windows和Linux
@@ -23,16 +29,32 @@ class DataManager {
     }
 
     // 构建安全的文件URL
-    buildFileUrl(filePath) {
+    async buildFileUrl(filePath) {
         const normalizedPath = this.normalizePath(filePath);
-        return `assets/${normalizedPath}`;
+        
+        if (this.isElectronApp()) {
+            // Electron环境：使用IPC获取file://协议路径
+            return await window.electronAPI.getResourcePath(`assets/${normalizedPath}`);
+        } else {
+            // Web环境：使用相对路径
+            return `assets/${normalizedPath}`;
+        }
     }
 
     async initialize() {
         if (this.initialized) return;
         
         try {
-            const response = await fetch('assets/office_files.json');
+            let response;
+            if (this.isElectronApp()) {
+                // Electron环境：使用IPC获取file://协议路径
+                const fileUrl = await window.electronAPI.getResourcePath('assets/office_files.json');
+                response = await fetch(fileUrl);
+            } else {
+                // Web环境：使用相对路径
+                response = await fetch('assets/office_files.json');
+            }
+            
             this.officeFiles = await response.json();
             this.initialized = true;
             console.log('数据初始化完成', this.officeFiles);
@@ -92,7 +114,7 @@ class DataManager {
     // 读取文本文件内容
     async readTextFile(filePath) {
         try {
-            const fileUrl = this.buildFileUrl(filePath);
+            const fileUrl = await this.buildFileUrl(filePath);
             console.log('正在读取文件:', fileUrl);
             
             const response = await fetch(fileUrl);
@@ -110,14 +132,14 @@ class DataManager {
     }
 
     // 获取PDF文件URL
-    getPdfUrl(filePath) {
-        return this.buildFileUrl(filePath);
+    async getPdfUrl(filePath) {
+        return await this.buildFileUrl(filePath);
     }
 
     // 检查文件是否存在
     async checkFileExists(filePath) {
         try {
-            const fileUrl = this.buildFileUrl(filePath);
+            const fileUrl = await this.buildFileUrl(filePath);
             const response = await fetch(fileUrl, { method: 'HEAD' });
             return response.ok;
         } catch (error) {
@@ -138,24 +160,25 @@ class DataManager {
     }
 
     // 调试工具：打印所有文件路径的处理结果
-    debugPaths() {
+    async debugPaths() {
         if (!this.officeFiles) {
             console.log('数据尚未初始化');
             return;
         }
         
         console.group('文件路径调试信息');
-        this.officeFiles.files.forEach((file, index) => {
+        for (let i = 0; i < Math.min(5, this.officeFiles.files.length); i++) {
+            const file = this.officeFiles.files[i];
             const normalized = this.normalizePath(file.path);
-            const url = this.buildFileUrl(file.path);
-            console.log(`文件 ${index + 1}:`, {
+            const url = await this.buildFileUrl(file.path);
+            console.log(`文件 ${i + 1}:`, {
                 原始路径: file.path,
                 标准化路径: normalized,
                 文件URL: url,
                 文件名: file.filename,
                 扩展名: file.extension
             });
-        });
+        }
         console.groupEnd();
     }
 
