@@ -219,6 +219,132 @@ webppt/
 - **触摸支持** - 支持手势滑动操作
 - **动画反馈** - 点击和悬停的即时视觉反馈
 
+## 🖥️ Electron桌面应用部署
+
+### 桌面应用特性
+- **离线运行** - 无需网络连接即可使用
+- **原生体验** - 系统集成，支持菜单和快捷键
+- **跨平台** - 支持Windows和Linux系统
+- **安全可靠** - 本地运行，数据安全
+
+### 构建桌面应用
+
+#### 前置要求
+```bash
+# 安装Node.js (16.0+)和npm (8.0+)
+node --version
+npm --version
+
+# 安装Python (用于图标生成)
+python --version
+```
+
+#### 快速构建
+```bash
+# Linux/macOS
+./build-electron.sh
+
+# Windows
+build-electron.bat
+```
+
+#### 手动构建
+```bash
+# 安装依赖
+npm install
+
+# 生成应用图标
+python scripts/generate_icons.py
+
+# 构建特定平台
+npm run build:win     # Windows版本
+npm run build:linux   # Linux版本
+npm run build:all     # 全平台构建
+
+# 开发测试
+npm start
+```
+
+#### 输出文件
+- **Windows**: `dist/湘潭城发集团合规宣传 Setup 1.0.0.exe`
+- **Linux**: `dist/湘潭城发集团合规宣传-1.0.0.AppImage`
+
+### 桌面应用配置
+
+桌面应用的配置文件位于：
+- `package.json` - 主要构建配置
+- `electron/main.js` - 主进程配置
+- `electron/preload.js` - 预加载脚本
+
+#### 自定义窗口尺寸
+```javascript
+// electron/main.js
+new BrowserWindow({
+  width: 1400,      // 窗口宽度
+  height: 900,      // 窗口高度
+  minWidth: 1024,   // 最小宽度
+  minHeight: 768    // 最小高度
+})
+```
+
+#### 修改应用信息
+```json
+// package.json
+"build": {
+  "appId": "com.xtcf.compliance",
+  "productName": "湘潭城发集团合规宣传",
+  "win": {
+    "publisherName": "湘潭城发集团"
+  }
+}
+```
+
+### 🎯 Electron桌面应用版本
+
+#### 已完成构建
+- ✅ **Linux AppImage版本** - 便携式应用，双击即可运行
+- ✅ **Linux DEB包版本** - 系统级安装包，集成到应用菜单
+- ⏳ **Windows版本** - 需要在Windows环境或Wine下构建
+
+#### 快速启动
+```bash
+# 使用启动器脚本（推荐）
+./start-app.sh
+
+# 或直接运行AppImage
+./dist/湘潭城发集团合规宣传-1.0.0.AppImage
+
+# 或安装DEB包
+sudo dpkg -i dist/xtcf-compliance-app_1.0.0_amd64.deb
+```
+
+#### Electron版本优势
+- 🖥️ **原生桌面体验** - 独立窗口运行，无需浏览器
+- 🚀 **快速启动** - 一键启动，响应速度更快
+- 🔒 **离线使用** - 完全本地化，无需网络连接
+- 📱 **跨平台兼容** - 支持Windows、Linux、macOS
+- 🎨 **系统集成** - 原生菜单、对话框、通知等
+
+详细使用说明请参考：`ELECTRON_DEPLOYMENT.md`
+
+### 企业部署建议
+
+#### 内部分发
+1. **代码签名**: 使用企业证书对应用进行签名
+2. **内网分发**: 搭建内部应用分发服务器
+3. **版本管理**: 建立应用版本更新机制
+
+#### 用户安装
+- **Windows**: 运行.exe安装程序，支持静默安装
+- **Linux**: 下载.AppImage文件，添加执行权限后运行
+
+#### 系统集成
+- 自动创建桌面快捷方式
+- 注册开始菜单项
+- 支持文件关联（可选）
+
+---
+
 ## 🌐 浏览器兼容性
 
 | 浏览器 | 最低版本 | 说明 |

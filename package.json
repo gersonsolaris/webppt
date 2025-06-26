@@ -1,0 +1,94 @@
+{
+  "name": "xtcf-compliance-app",
+  "version": "1.0.0",
+  "description": "湘潭城发集团合规宣传展示应用",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "build:all": "electron-builder --win --linux",
+    "dist": "npm run build:all",
+    "pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "keywords": [
+    "湘潭城发",
+    "合规宣传",
+    "Electron",
+    "企业应用"
+  ],
+  "author": {
+    "name": "湘潭城发集团技术团队",
+    "email": "tech@xtcfjt.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "electron-updater": "^6.1.7"
+  },
+  "build": {
+    "appId": "com.xtcf.compliance",
+    "productName": "湘潭城发集团合规宣传",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!scripts/",
+      "!docs/",
+      "!test*.html",
+      "!debug.html",
+      "!simple-test.html",
+      "!server.py",
+      "!*.md",
+      "!.git/",
+      "!node_modules/",
+      "!.env",
+      "!build-electron.*"
+    ],
+    "extraFiles": [
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        }
+      ],
+      "icon": "electron/icons/icon.ico",
+      "publisherName": "湘潭城发集团",
+      "sign": null
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "electron/icons/icon.png",
+      "category": "Office"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "electron/icons/icon.ico",
+      "uninstallerIcon": "electron/icons/icon.ico",
+      "installerHeaderIcon": "electron/icons/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "湘潭城发合规宣传"
+    },
+    "publish": null
+  }
+}
