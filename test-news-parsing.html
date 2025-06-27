@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻链接解析测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .link-item { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px; }
+        .organization-tag { background: #007bff; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; }
+        .url { color: #007bff; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <h1>新闻链接解析测试</h1>
+    
+    <div id="test-results">
+        <button onclick="runTests()">运行测试</button>
+    </div>
+
+    <script>
+        // 模拟NavigationManager的parseNewsLinks方法
+        function parseNewsLinks(content, category) {
+            const lines = content.split('\n').filter(line => line.trim());
+            const links = [];
+            
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (!trimmedLine) continue;
+                
+                // 匹配包含http的行
+                const urlMatch = trimmedLine.match(/(https?:\/\/[^\s]+)/);
+                if (urlMatch) {
+                    const url = urlMatch[1];
+                    // 提取标题（URL前面的文字）
+                    let title = trimmedLine.replace(url, '').trim();
+                    
+                    // 清理标题中的序号和多余字符
+                    title = title.replace(/^\d+\.?\s*/, '').replace(/[\s:：]+$/, '').trim();
+                    
+                    // 如果没有标题，使用域名作为标题
+                    if (!title) {
+                        try {
+                            const urlObj = new URL(url);
+                            title = urlObj.hostname;
+                        } catch (e) {
+                            title = '链接';
+                        }
+                    }
+                    
+                    // 识别组织名称
+                    let organization = '';
+                    const orgLine = trimmedLine.toLowerCase();
+                    if (orgLine.includes('建工') || orgLine.includes('jg.')) {
+                        organization = '建工';
+                    } else if (orgLine.includes('交运')) {
+                        organization = '交运';
+                    } else if (orgLine.includes('城建') || orgLine.includes('cj.')) {
+                        organization = '城建';
+                    } else if (orgLine.includes('潭房') || orgLine.includes('tf.')) {
+                        organization = '潭房';
+                    } else if (orgLine.includes('湘投') || orgLine.includes('xt.')) {
+                        organization = '湘投';
+                    } else if (orgLine.includes('物业') || orgLine.includes('sq.')) {
+                        organization = '物业';
+                    } else if (orgLine.includes('湘盾') || orgLine.includes('xd.')) {
+                        organization = '湘盾';
+                    } else if (orgLine.includes('绿矿') || orgLine.includes('ks.')) {
+                        organization = '绿矿';
+                    } else if (orgLine.includes('红旅') || orgLine.includes('hl.')) {
+                        organization = '红旅';
+                    } else if (orgLine.includes('大学城') || orgLine.includes('dxc.')) {
+                        organization = '大学城';
+                    } else if (orgLine.includes('集团') && (orgLine.includes('本部') || orgLine.includes('xtcfjt.com'))) {
+                        organization = '集团本部';
+                    }
+                    
+                    links.push({
+                        title: title,
+                        url: url,
+                        organization: organization,
+                        originalLine: trimmedLine
+                    });
+                }
+            }
+            
+            return links;
+        }
+
+        function runTests() {
+            const testContent1 = `集团本部：
+1.以规立行 以行致远——湘潭城发集团党委书记、董事长周俊文谈新时代国有企业合规治理。  http://www.xtcfjt.com/contents/20250331/491/23770.html
+2.集团党委委员、副总经理、首席合规官孙桂英谈合规——合规筑基石 城发启新程：构建稳健发展新蓝图。 http://www.xtcfjt.com/contents/20250214/491/23349.html
+
+建工：http://jg.xtcfjt.com/contents/68/23558.html
+交运：https://mp.weixin.qq.com/s/_y3iSPAlgRKu9O1ZgcyLmw
+城建：http://cj.xtcfjt.com/contents/120/23564.html
+潭房：http://tf.xtcfjt.com/contents/55/23620.html`;
+
+            const testContent2 = `集团   https://mp.weixin.qq.com/s/WUkw5rPACSOSGTQAA9de1w
+潭房  http://tf.xtcfjt.com/contents/55/24044.html
+湘盾   http://xd.xtcfjt.com/contents/20250411/285/23817.html
+绿矿  http://ks.xtcfjt.com/contents/259/24102.html#
+红旅  http://hl.xtcfjt.com/contents/81/24135.html
+大学城  http://dxc.xtcfjt.com/contents/20250527/471/24013.html`;
+
+            const results1 = parseNewsLinks(testContent1, '新闻稿链接');
+            const results2 = parseNewsLinks(testContent2, '子集团新闻稿链接');
+
+            const container = document.getElementById('test-results');
+            container.innerHTML = `
+                <h2>测试结果</h2>
+                
+                <div class="test-result success">
+                    <h3>新闻稿链接解析结果 (${results1.length} 个链接)</h3>
+                    ${results1.map(link => `
+                        <div class="link-item">
+                            <div><strong>标题:</strong> ${link.title}</div>
+                            <div><strong>组织:</strong> <span class="organization-tag">${link.organization || '未识别'}</span></div>
+                            <div><strong>URL:</strong> <span class="url">${link.url}</span></div>
+                            <div><strong>原始行:</strong> <small>${link.originalLine}</small></div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="test-result success">
+                    <h3>子集团新闻稿链接解析结果 (${results2.length} 个链接)</h3>
+                    ${results2.map(link => `
+                        <div class="link-item">
+                            <div><strong>标题:</strong> ${link.title}</div>
+                            <div><strong>组织:</strong> <span class="organization-tag">${link.organization || '未识别'}</span></div>
+                            <div><strong>URL:</strong> <span class="url">${link.url}</span></div>
+                            <div><strong>原始行:</strong> <small>${link.originalLine}</small></div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <button onclick="runTests()">重新运行测试</button>
+            `;
+        }
+    </script>
+</body>
+</html>

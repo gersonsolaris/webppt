@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>规行致远 - 新闻链接测试</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="presentation-container">
+        <header class="header">
+            <div class="logo-container">
+                <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+            </div>
+            <h1 class="main-title">规行致远 - 测试</h1>
+            <button class="back-btn" onclick="location.href='index.html'">返回首页</button>
+        </header>
+        <main class="content-area">
+            <div id="test-area">
+                <button onclick="testNewsLinks()" style="padding: 10px 20px; font-size: 16px; margin: 20px;">测试新闻链接功能</button>
+                <div id="result"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 过渡动画 -->
+    <div id="transitionOverlay" class="transition-overlay">
+        <div class="transition-content">
+            <div class="spinner"></div>
+            <p>加载中...</p>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/navigation.js"></script>
+    <script>
+        // 初始化数据管理器
+        window.addEventListener('DOMContentLoaded', async () => {
+            await window.dataManager.init();
+        });
+
+        async function testNewsLinks() {
+            try {
+                document.getElementById('result').innerHTML = '<p>正在加载...</p>';
+                await window.navigationManager.showNewsLinks();
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p style="color: red;">错误: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
