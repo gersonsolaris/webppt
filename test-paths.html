@@ -33,7 +33,7 @@
             for (const testPath of testCases) {
                 try {
                     const normalizedPath = dataManager.normalizePath(testPath);
-                    const fileUrl = dataManager.buildFileUrl(testPath);
+                    const fileUrl = await dataManager.buildFileUrl(testPath);
                     const exists = await dataManager.checkFileExists(testPath);
                     
                     const resultDiv = document.createElement('div');

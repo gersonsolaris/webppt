@@ -267,9 +267,9 @@ class CarouselManager {
     }
 
     // 生成PDF页面查看URL
-    generatePDFPageUrl(pdfPath, pageNumber) {
+    async generatePDFPageUrl(pdfPath, pageNumber) {
         // 使用本地PDF查看器来显示特定页面
-        const pdfUrl = window.dataManager.getPdfUrl(pdfPath);
+        const pdfUrl = await window.dataManager.getPdfUrl(pdfPath);
         const title = pdfPath.split('/').pop().replace('.pdf', '');
         return `pdf-viewer.html?file=${encodeURIComponent(pdfUrl)}&page=${pageNumber}&title=${encodeURIComponent(title)}`;
     }
@@ -302,10 +302,10 @@ async function showFullArticle(filePath) {
 }
 
 // 查看PDF
-function viewPDF(filePath) {
+async function viewPDF(filePath) {
     try {
         window.navigationManager.showTransition();
-        const pdfUrl = window.dataManager.getPdfUrl(filePath);
+        const pdfUrl = await window.dataManager.getPdfUrl(filePath);
         const fileName = filePath.split('/').pop().replace('.pdf', '');
         
         setTimeout(() => {

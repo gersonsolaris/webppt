@@ -160,7 +160,7 @@ async function openFile(filePath, type) {
             }, 500);
         } else if (type === 'pdf' || type === 'document') {
             // PDF文件
-            const pdfUrl = window.dataManager.getPdfUrl(filePath);
+            const pdfUrl = await window.dataManager.getPdfUrl(filePath);
             setTimeout(() => {
                 showPDFViewer(fileName, pdfUrl);
             }, 500);

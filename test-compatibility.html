@@ -58,7 +58,7 @@
                 
                 for (const path of pathTests) {
                     const normalized = dataManager.normalizePath(path);
-                    const url = dataManager.buildFileUrl(path);
+                    const url = await dataManager.buildFileUrl(path);
                     results += `<p><strong>原始:</strong> ${path}<br><strong>标准化:</strong> ${normalized}<br><strong>URL:</strong> ${url}</p>`;
                 }
                 results += '</div>';
