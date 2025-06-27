@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
+    "build:win-simple": "electron-builder --win --dir",
     "build:win": "electron-builder --win",
     "build:linux": "electron-builder --linux",
     "build:all": "electron-builder --win --linux",
@@ -55,17 +56,8 @@
       "assets/**/*"
     ],
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": ["x64"]
-        }
-      ],
-      "icon": "electron/icons/icon.ico",
-      "publisherName": "湘潭城发集团",
-      "sign": null,
-      "verifyUpdateCodeSignature": false,
-      "requestedExecutionLevel": "asInvoker"
+      "target": "dir",
+      "icon": "electron/icons/icon.ico"
     },
     "linux": {
       "target": [
@@ -80,16 +72,6 @@
       ],
       "icon": "electron/icons/icon.png",
       "category": "Office"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "electron/icons/icon.ico",
-      "uninstallerIcon": "electron/icons/icon.ico",
-      "installerHeaderIcon": "electron/icons/icon.ico",
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "湘潭城发合规宣传"
     },
     "publish": null
   }

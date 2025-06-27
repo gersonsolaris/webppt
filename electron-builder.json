@@ -1,0 +1,42 @@
+{
+  "appId": "com.xtcf.compliance",
+  "productName": "湘潭城发集团合规宣传",
+  "directories": {
+    "output": "dist"
+  },
+  "files": [
+    "**/*",
+    "!scripts/",
+    "!docs/",
+    "!test*.html",
+    "!debug.html",
+    "!simple-test.html",
+    "!server.py",
+    "!*.md",
+    "!.git/",
+    "!node_modules/",
+    "!.env",
+    "!build-electron.*"
+  ],
+  "extraFiles": [
+    "assets/**/*"
+  ],
+  "win": {
+    "target": {
+      "target": "dir",
+      "arch": ["x64"]
+    },
+    "icon": "electron/icons/icon.ico"
+  },
+  "nsis": null,
+  "portable": null,
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "electron/icons/icon.png"
+  }
+}
