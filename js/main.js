@@ -64,6 +64,9 @@ class App {
         
         // 监听窗口大小变化
         window.addEventListener('resize', this.handleResize.bind(this));
+        
+        // 禁用文字选择和复制（Web环境下的备用方案）
+        this.disableTextSelection();
     }
 
     handleKeyPress(event) {
@@ -161,6 +164,86 @@ class App {
         } else {
             root.style.fontSize = '16px';
         }
+    }
+
+    // 禁用文字选择和复制（Web环境下的备用方案）
+    disableTextSelection() {
+        // 如果在Electron环境中，preload.js已经处理了，这里作为Web环境的备用方案
+        if (window.electronAPI) {
+            console.log('Electron环境，文字选择禁用由preload.js处理');
+            return;
+        }
+
+        console.log('Web环境，添加文字选择禁用');
+
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            return false;
+        });
+
+        // 禁用拖拽
+        document.addEventListener('dragstart', (e) => {
+            e.preventDefault();
+            return false;
+        });
+
+        // 禁用选择开始事件
+        document.addEventListener('selectstart', (e) => {
+            e.preventDefault();
+            return false;
+        });
+
+        // 禁用复制相关快捷键
+        document.addEventListener('keydown', (e) => {
+            // 禁用Ctrl+A (全选)
+            if (e.ctrlKey && e.key.toLowerCase() === 'a') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // 禁用Ctrl+C (复制)
+            if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // 禁用Ctrl+V (粘贴)
+            if (e.ctrlKey && e.key.toLowerCase() === 'v') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // 禁用Ctrl+X (剪切)
+            if (e.ctrlKey && e.key.toLowerCase() === 'x') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // 禁用Ctrl+S (保存)
+            if (e.ctrlKey && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // 禁用Ctrl+P (打印)
+            if (e.ctrlKey && e.key.toLowerCase() === 'p') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // 禁用Ctrl+U (查看源代码)
+            if (e.ctrlKey && e.key.toLowerCase() === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // 禁用F12 (开发者工具)
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+        });
     }
 
     showErrorMessage(message) {

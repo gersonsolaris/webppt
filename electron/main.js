@@ -70,6 +70,11 @@ function createWindow() {
   const indexPath = path.join(__dirname, '..', 'index.html');
   mainWindow.loadFile(indexPath);
 
+  // 禁用右键上下文菜单（防止复制粘贴）
+  mainWindow.webContents.on('context-menu', (event) => {
+    event.preventDefault();
+  });
+
   // 处理外部链接
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);

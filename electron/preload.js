@@ -56,7 +56,105 @@ window.addEventListener('DOMContentLoaded', () => {
       console.log(`背景图片路径替换: ${style} -> ${newStyle}`);
     }
   });
+
+  // 禁用文字选择和复制相关功能
+  disableTextSelection();
+  disableKeyboardShortcuts();
 });
+
+// 禁用文字选择
+function disableTextSelection() {
+  // 添加CSS禁用文字选择
+  const style = document.createElement('style');
+  style.textContent = `
+    * {
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      -webkit-touch-callout: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    /* 确保输入框和可编辑元素仍然可以选择文字 */
+    input, textarea, [contenteditable="true"] {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 禁用拖拽
+  document.addEventListener('dragstart', (e) => {
+    e.preventDefault();
+    return false;
+  });
+
+  // 禁用选择开始事件
+  document.addEventListener('selectstart', (e) => {
+    e.preventDefault();
+    return false;
+  });
+
+  console.log('文字选择已禁用');
+}
+
+// 禁用键盘快捷键
+function disableKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    // 禁用Ctrl+A (全选)
+    if (e.ctrlKey && e.key === 'a') {
+      e.preventDefault();
+      return false;
+    }
+    
+    // 禁用Ctrl+C (复制)
+    if (e.ctrlKey && e.key === 'c') {
+      e.preventDefault();
+      return false;
+    }
+    
+    // 禁用Ctrl+V (粘贴)
+    if (e.ctrlKey && e.key === 'v') {
+      e.preventDefault();
+      return false;
+    }
+    
+    // 禁用Ctrl+X (剪切)
+    if (e.ctrlKey && e.key === 'x') {
+      e.preventDefault();
+      return false;
+    }
+    
+    // 禁用Ctrl+S (保存)
+    if (e.ctrlKey && e.key === 's') {
+      e.preventDefault();
+      return false;
+    }
+    
+    // 禁用Ctrl+P (打印)
+    if (e.ctrlKey && e.key === 'p') {
+      e.preventDefault();
+      return false;
+    }
+    
+    // 禁用Ctrl+U (查看源代码)
+    if (e.ctrlKey && e.key === 'u') {
+      e.preventDefault();
+      return false;
+    }
+    
+    // 禁用F12 (在这里作为备用，主要在主进程中控制)
+    if (e.key === 'F12') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  console.log('键盘快捷键已禁用');
+}
 
 // 控制台输出应用信息
 console.log('湘潭城发集团合规宣传应用已启动');
