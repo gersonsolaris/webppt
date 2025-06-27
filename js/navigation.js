@@ -60,12 +60,14 @@ class NavigationManager {
         const container = document.querySelector('.presentation-container');
         container.innerHTML = `
             <header class="header">
-                <div class="logo-container">
-                    <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
-                    <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                <div class="page-header">
+                    <div class="logo-container">
+                        <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                        <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                    </div>
+                    <h1 class="main-title">${title}</h1>
+                    <button class="back-btn" onclick="goBack()">返回首页</button>
                 </div>
-                <h1 class="main-title">${title}</h1>
-                <button class="back-btn" onclick="goBack()">返回首页</button>
             </header>
             <main class="content-area">
                 <div class="file-list">
@@ -87,12 +89,13 @@ class NavigationManager {
         return files.map(file => {
             const icon = this.getFileIcon(file.extension);
             const size = this.formatFileSize(file.size);
+            const cleanName = this.cleanFileName(file.filename);
             
             return `
                 <div class="file-item" onclick="openFile('${file.path}', '${type}')">
                     <div class="file-icon">${icon}</div>
                     <div class="file-info">
-                        <h4 class="file-name">${file.filename}</h4>
+                        <h4 class="file-name">${cleanName}</h4>
                         <p class="file-details">${size} • ${file.extension.toUpperCase()}</p>
                     </div>
                     <div class="file-action">
@@ -147,12 +150,14 @@ class NavigationManager {
             const container = document.querySelector('.presentation-container');
             container.innerHTML = `
                 <header class="header">
-                    <div class="logo-container">
-                        <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
-                        <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                    <div class="page-header">
+                        <div class="logo-container">
+                            <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                            <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                        </div>
+                        <h1 class="main-title">规行致远</h1>
+                        <button class="back-btn" onclick="goBack()">返回首页</button>
                     </div>
-                    <h1 class="main-title">规行致远</h1>
-                    <button class="back-btn" onclick="goBack()">返回首页</button>
                 </header>
                 <main class="content-area">
                     <div class="news-links-container">
@@ -356,6 +361,14 @@ class NavigationManager {
             return url.length > 50 ? url.substring(0, 47) + '...' : url;
         }
     }
+
+    // 清理文件名，去除后缀
+    cleanFileName(fileName) {
+        return fileName
+            .replace(/\.(txt|pdf|doc|docx|wps)$/i, '') // 去除常见文件后缀
+            .replace(/^\d+\.?\s*/, '') // 去除开头的数字和点
+            .trim();
+    }
 }
 
 // 全局导航函数
@@ -401,17 +414,20 @@ async function openFile(filePath, type) {
 // 显示文档查看器
 function showDocumentViewer(title, content, type) {
     const container = document.querySelector('.presentation-container');
+    const cleanTitle = window.navigationManager.cleanFileName(title);
     
     const formattedContent = formatContent(content, type);
     
     container.innerHTML = `
         <header class="header">
-            <div class="logo-container">
-                <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
-                <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+            <div class="page-header">
+                <div class="logo-container">
+                    <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                    <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                </div>
+                <h1 class="main-title">${cleanTitle}</h1>
+                <button class="back-btn" onclick="goBack()">返回</button>
             </div>
-            <h1 class="main-title">${title}</h1>
-            <button class="back-btn" onclick="goBack()">返回</button>
         </header>
         <main class="content-area">
             <div class="document-viewer">
@@ -428,15 +444,18 @@ function showDocumentViewer(title, content, type) {
 // 显示PDF查看器
 function showPDFViewer(title, pdfUrl) {
     const container = document.querySelector('.presentation-container');
+    const cleanTitle = window.navigationManager.cleanFileName(title);
     
     container.innerHTML = `
         <header class="header">
-            <div class="logo-container">
-                <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
-                <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+            <div class="page-header">
+                <div class="logo-container">
+                    <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                    <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                </div>
+                <h1 class="main-title">${cleanTitle}</h1>
+                <button class="back-btn" onclick="goBack()">返回</button>
             </div>
-            <h1 class="main-title">${title}</h1>
-            <button class="back-btn" onclick="goBack()">返回</button>
         </header>
         <main class="content-area">
             <div class="pdf-viewer">

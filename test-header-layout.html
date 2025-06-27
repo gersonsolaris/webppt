@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>头部布局测试</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- 测试模块列表页面头部 -->
+        <header class="header">
+            <div class="page-header">
+                <div class="logo-container">
+                    <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                    <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                </div>
+                <h1 class="main-title">人人讲合规</h1>
+                <button class="back-btn" onclick="goBack()">返回首页</button>
+            </div>
+        </header>
+        
+        <main class="content-area">
+            <div class="file-list">
+                <div class="file-item">
+                    <div class="file-icon">📝</div>
+                    <div class="file-info">
+                        <h4 class="file-name">董事长谈合规的宣传稿</h4>
+                        <p class="file-details">12.5 KB • TXT</p>
+                    </div>
+                    <div class="file-action">
+                        <span>查看 →</span>
+                    </div>
+                </div>
+                
+                <div class="file-item">
+                    <div class="file-icon">📝</div>
+                    <div class="file-info">
+                        <h4 class="file-name">企业首席合规官谈合规</h4>
+                        <p class="file-details">15.2 KB • TXT</p>
+                    </div>
+                    <div class="file-action">
+                        <span>查看 →</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <hr style="margin: 20px 0; border: 2px solid #333;">
+
+    <div class="presentation-container">
+        <!-- 测试文档查看器头部 -->
+        <header class="header">
+            <div class="page-header">
+                <div class="logo-container">
+                    <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                    <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                </div>
+                <h1 class="main-title">董事长谈合规的宣传稿</h1>
+                <button class="back-btn" onclick="goBack()">返回</button>
+            </div>
+        </header>
+        
+        <main class="content-area">
+            <div class="document-viewer">
+                <div class="document-content">
+                    <p>这里是文档内容示例...</p>
+                    <p>测试标题显示没有文件后缀。</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <hr style="margin: 20px 0; border: 2px solid #333;">
+
+    <div class="presentation-container">
+        <!-- 测试PDF查看器头部 -->
+        <header class="header">
+            <div class="page-header">
+                <div class="logo-container">
+                    <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                    <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                </div>
+                <h1 class="main-title">国有企业投资风险防控全解析</h1>
+                <button class="back-btn" onclick="goBack()">返回</button>
+            </div>
+        </header>
+        
+        <main class="content-area">
+            <div class="pdf-viewer">
+                <div style="height: 300px; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                    <p>PDF预览区域</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function goBack() {
+            alert('返回按钮点击测试');
+        }
+    </script>
+</body>
+</html>

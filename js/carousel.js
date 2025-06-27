@@ -17,10 +17,23 @@ class CarouselManager {
     }
 
     async initialize() {
-        await window.dataManager.initialize();
-        await this.loadCarouselData();
-        this.setupCarousels();
-        this.startAutoPlay();
+        try {
+            // 检查必要的DOM元素是否存在
+            const articleCarousel = document.getElementById('articleCarousel');
+            const pptCarousel = document.getElementById('pptCarousel');
+            
+            if (!articleCarousel || !pptCarousel) {
+                console.warn('轮播容器未找到，跳过轮播初始化');
+                return;
+            }
+            
+            await window.dataManager.initialize();
+            await this.loadCarouselData();
+            this.setupCarousels();
+            this.startAutoPlay();
+        } catch (error) {
+            console.error('轮播管理器初始化失败:', error);
+        }
     }
 
     async loadCarouselData() {
@@ -31,8 +44,9 @@ class CarouselManager {
         for (const article of articles) {
             try {
                 const content = await window.dataManager.readTextFile(article.path);
+                const cleanTitle = window.navigationManager.cleanFileName(article.filename);
                 this.carouselData.article.push({
-                    title: article.filename.replace('.txt', ''),
+                    title: cleanTitle,
                     content: content.substring(0, 500) + '...', // 截取前500字符作为预览
                     fullContent: content,
                     path: article.path
@@ -54,8 +68,9 @@ class CarouselManager {
             } catch (error) {
                 console.error('加载PPT页面失败:', error);
                 // 如果无法解析PDF，添加一个默认项
+                const cleanTitle = window.navigationManager.cleanFileName(lecture.filename);
                 this.carouselData.ppt.push({
-                    title: lecture.filename.replace('.pdf', ''),
+                    title: cleanTitle,
                     description: '合规讲堂',
                     pdfPath: lecture.path,
                     pageNumber: 1,
@@ -77,10 +92,13 @@ class CarouselManager {
 
     updateArticleCarousel() {
         const carousel = document.getElementById('articleCarousel');
-        if (!carousel || this.carouselData.article.length === 0) {
-            if (carousel) {
-                carousel.innerHTML = '<div class="slide-placeholder"><p>暂无合规文章</p></div>';
-            }
+        if (!carousel) {
+            console.warn('articleCarousel 元素未找到');
+            return;
+        }
+        
+        if (this.carouselData.article.length === 0) {
+            carousel.innerHTML = '<div class="slide-placeholder"><p>暂无合规文章</p></div>';
             return;
         }
 
@@ -100,7 +118,12 @@ class CarouselManager {
 
     updatePPTCarousel() {
         const carousel = document.getElementById('pptCarousel');
-        if (!carousel || this.carouselData.ppt.length === 0) {
+        if (!carousel) {
+            console.warn('pptCarousel 元素未找到');
+            return;
+        }
+        
+        if (this.carouselData.ppt.length === 0) {
             carousel.innerHTML = '<div class="slide-placeholder"><p>暂无讲堂内容</p></div>';
             return;
         }
@@ -176,6 +199,13 @@ class CarouselManager {
     nextSlide(type) {
         if (this.totalSlides[type] === 0) return;
         
+        // 检查对应的DOM元素是否存在
+        const carousel = document.getElementById(type === 'article' ? 'articleCarousel' : 'pptCarousel');
+        if (!carousel) {
+            console.warn(`${type}Carousel 元素未找到，跳过轮播`);
+            return;
+        }
+        
         this.currentSlides[type] = (this.currentSlides[type] + 1) % this.totalSlides[type];
         this.updateCarousel(type);
         this.resetAutoPlay();
@@ -183,6 +213,13 @@ class CarouselManager {
 
     prevSlide(type) {
         if (this.totalSlides[type] === 0) return;
+        
+        // 检查对应的DOM元素是否存在
+        const carousel = document.getElementById(type === 'article' ? 'articleCarousel' : 'pptCarousel');
+        if (!carousel) {
+            console.warn(`${type}Carousel 元素未找到，跳过轮播`);
+            return;
+        }
         
         this.currentSlides[type] = this.currentSlides[type] === 0 
             ? this.totalSlides[type] - 1 
@@ -201,6 +238,15 @@ class CarouselManager {
     }
 
     startAutoPlay() {
+        // 检查必要的DOM元素是否存在
+        const articleCarousel = document.getElementById('articleCarousel');
+        const pptCarousel = document.getElementById('pptCarousel');
+        
+        if (!articleCarousel || !pptCarousel) {
+            console.warn('轮播容器未找到，跳过自动播放初始化');
+            return;
+        }
+        
         this.autoPlayInterval = setInterval(() => {
             this.nextSlide('ppt');
             setTimeout(() => {
@@ -228,7 +274,7 @@ class CarouselManager {
     // 生成PDF页面列表
     async generatePDFPages(lecture) {
         const pages = [];
-        const baseName = lecture.filename.replace('.pdf', '');
+        const cleanTitle = window.navigationManager.cleanFileName(lecture.filename);
         
         // 这里我们模拟每个PDF有多页（实际项目中需要PDF.js来解析PDF页数）
         // 假设每个PDF有5-10页不等
@@ -236,7 +282,7 @@ class CarouselManager {
         
         for (let i = 1; i <= pageCount; i++) {
             pages.push({
-                title: baseName,
+                title: cleanTitle,
                 description: `第${i}页`,
                 pdfPath: lecture.path,
                 pageNumber: i,
@@ -270,8 +316,9 @@ class CarouselManager {
     async generatePDFPageUrl(pdfPath, pageNumber) {
         // 使用本地PDF查看器来显示特定页面
         const pdfUrl = await window.dataManager.getPdfUrl(pdfPath);
-        const title = pdfPath.split('/').pop().replace('.pdf', '');
-        return `pdf-viewer.html?file=${encodeURIComponent(pdfUrl)}&page=${pageNumber}&title=${encodeURIComponent(title)}`;
+        const filename = pdfPath.split('/').pop();
+        const cleanTitle = window.navigationManager.cleanFileName(filename);
+        return `pdf-viewer.html?file=${encodeURIComponent(pdfUrl)}&page=${pageNumber}&title=${encodeURIComponent(cleanTitle)}`;
     }
 }
 

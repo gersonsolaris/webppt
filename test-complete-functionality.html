@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完整功能测试 - 规行致远</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- 主页内容区域 -->
+        <main class="main-content">
+            <!-- 轮播区域 -->
+            <section class="carousel-section">
+                <div class="carousel-container">
+                    <div class="carousel-header">
+                        <h3>文章轮播</h3>
+                        <div class="carousel-nav">
+                            <button onclick="prevSlide('article')" class="nav-btn prev-btn">‹</button>
+                            <span id="articleIndicator">1 / 2</span>
+                            <button onclick="nextSlide('article')" class="nav-btn next-btn">›</button>
+                        </div>
+                    </div>
+                    <div id="articleCarousel" class="carousel-content">
+                        <div class="article-slide">
+                            <h4>董事长谈合规的宣传稿</h4>
+                            <div class="article-preview">
+                                <p>测试文章预览内容，标题已去除.txt后缀...</p>
+                            </div>
+                            <button class="read-more-btn">阅读全文</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-container">
+                    <div class="carousel-header">
+                        <h3>PPT轮播</h3>
+                        <div class="carousel-nav">
+                            <button onclick="prevSlide('ppt')" class="nav-btn prev-btn">‹</button>
+                            <span id="pptIndicator">1 / 4</span>
+                            <button onclick="nextSlide('ppt')" class="nav-btn next-btn">›</button>
+                        </div>
+                    </div>
+                    <div id="pptCarousel" class="carousel-content">
+                        <div class="ppt-slide">
+                            <div class="ppt-thumbnail">📊</div>
+                            <div class="ppt-info">
+                                <h4>国有企业投资风险防控全解析</h4>
+                                <p>合规讲堂</p>
+                                <button class="view-ppt-btn">查看讲座</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 模块导航区域 -->
+            <section class="module-navigation">
+                <div class="module-grid">
+                    <div class="module-item" onclick="testModuleNavigation('people-compliance')">
+                        <div class="module-icon">👥</div>
+                        <h3>人人讲合规</h3>
+                        <p>了解合规文化</p>
+                    </div>
+                    <div class="module-item" onclick="testModuleNavigation('compliance-express')">
+                        <div class="module-icon">📰</div>
+                        <h3>合规速递</h3>
+                        <p>最新政策法规</p>
+                    </div>
+                    <div class="module-item" onclick="testModuleNavigation('compliance-lecture')">
+                        <div class="module-icon">🎓</div>
+                        <h3>合规讲堂</h3>
+                        <p>专业培训资料</p>
+                    </div>
+                    <div class="module-item" onclick="testModuleNavigation('news-archive')">
+                        <div class="module-icon">🔗</div>
+                        <h3>规行致远</h3>
+                        <p>新闻链接归档</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 转场动画覆盖层 -->
+    <div id="transitionOverlay" class="transition-overlay">
+        <div class="transition-content">
+            <div class="loader"></div>
+            <p>页面加载中...</p>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/carousel.js"></script>
+
+    <script>
+        // 测试模块导航
+        function testModuleNavigation(moduleType) {
+            console.log('测试导航到:', moduleType);
+            
+            // 显示转场效果
+            window.navigationManager.showTransition();
+            
+            setTimeout(() => {
+                switch (moduleType) {
+                    case 'people-compliance':
+                        showTestModulePage('人人讲合规', [
+                            {filename: '1.董事长谈合规的宣传稿wps.txt', extension: '.txt', size: 12800, path: 'test'},
+                            {filename: '2.企业首席合规官谈合规.txt', extension: '.txt', size: 15600, path: 'test'}
+                        ]);
+                        break;
+                    case 'compliance-lecture':
+                        showTestModulePage('合规讲堂', [
+                            {filename: '3月 国有企业投资风险防控全解析.pdf', extension: '.pdf', size: 2048000, path: 'test'},
+                            {filename: '4月 政府投资项目超概算问题的风险应对与项目结算.pdf', extension: '.pdf', size: 1856000, path: 'test'}
+                        ]);
+                        break;
+                    case 'news-archive':
+                        showTestNewsPage();
+                        break;
+                    default:
+                        showTestModulePage(moduleType, []);
+                }
+            }, 500);
+        }
+
+        // 显示测试模块页面
+        function showTestModulePage(title, files) {
+            const container = document.querySelector('.presentation-container');
+            container.innerHTML = `
+                <header class="header">
+                    <div class="page-header">
+                        <div class="logo-container">
+                            <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                            <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                        </div>
+                        <h1 class="main-title">${title}</h1>
+                        <button class="back-btn" onclick="location.reload()">返回首页</button>
+                    </div>
+                </header>
+                <main class="content-area">
+                    <div class="file-list">
+                        ${generateTestFileList(files)}
+                    </div>
+                </main>
+            `;
+            window.navigationManager.hideTransition();
+        }
+
+        // 生成测试文件列表
+        function generateTestFileList(files) {
+            if (files.length === 0) {
+                return '<p class="no-files">暂无相关文件</p>';
+            }
+
+            return files.map(file => {
+                const icon = getTestFileIcon(file.extension);
+                const size = formatTestFileSize(file.size);
+                const cleanName = window.navigationManager.cleanFileName(file.filename);
+                
+                return `
+                    <div class="file-item" onclick="testOpenFile('${file.filename}')">
+                        <div class="file-icon">${icon}</div>
+                        <div class="file-info">
+                            <h4 class="file-name">${cleanName}</h4>
+                            <p class="file-details">${size} • ${file.extension.toUpperCase()}</p>
+                        </div>
+                        <div class="file-action">
+                            <span>查看 →</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 显示测试新闻页面
+        function showTestNewsPage() {
+            const container = document.querySelector('.presentation-container');
+            container.innerHTML = `
+                <header class="header">
+                    <div class="page-header">
+                        <div class="logo-container">
+                            <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                            <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                        </div>
+                        <h1 class="main-title">规行致远</h1>
+                        <button class="back-btn" onclick="location.reload()">返回首页</button>
+                    </div>
+                </header>
+                <main class="content-area">
+                    <div class="news-links-container">
+                        <div class="news-column">
+                            <h3 class="column-title">新闻稿链接</h3>
+                            <div class="links-list">
+                                <div class="news-group">
+                                    <div class="title-column">
+                                        <h4 class="news-title">城发集团合规管理体系建设成效显著</h4>
+                                    </div>
+                                    <div class="links-column">
+                                        <div class="link-item-new">
+                                            <span class="org-tag">集团本部</span>
+                                            <a href="#" target="_blank" class="news-link">
+                                                <span class="link-text">www.xtcfjt.com/news/123</span>
+                                                <span class="link-icon">🔗</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="news-column">
+                            <h3 class="column-title">子集团新闻稿链接</h3>
+                            <div class="links-list">
+                                <div class="news-group">
+                                    <div class="title-column">
+                                        <h4 class="news-title">建工集团加强合规文化建设</h4>
+                                    </div>
+                                    <div class="links-column">
+                                        <div class="link-item-new">
+                                            <span class="org-tag">建工</span>
+                                            <a href="#" target="_blank" class="news-link">
+                                                <span class="link-text">jg.xtcfjt.com/news/456</span>
+                                                <span class="link-icon">🔗</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            `;
+            window.navigationManager.hideTransition();
+        }
+
+        // 测试文件打开
+        function testOpenFile(filename) {
+            const cleanName = window.navigationManager.cleanFileName(filename);
+            showTestDocumentViewer(cleanName);
+        }
+
+        // 显示测试文档查看器
+        function showTestDocumentViewer(title) {
+            const container = document.querySelector('.presentation-container');
+            container.innerHTML = `
+                <header class="header">
+                    <div class="page-header">
+                        <div class="logo-container">
+                            <img src="assets/logo/城发集团LOGO背景透明.png" alt="城发集团" class="logo logo-left">
+                            <img src="assets/logo/合规LOGO.png" alt="规行致远" class="logo logo-right">
+                        </div>
+                        <h1 class="main-title">${title}</h1>
+                        <button class="back-btn" onclick="location.reload()">返回</button>
+                    </div>
+                </header>
+                <main class="content-area">
+                    <div class="document-viewer">
+                        <div class="document-content">
+                            <h2>${title}</h2>
+                            <p>这是文档内容示例。可以看到标题已经去除了文件后缀，logo和标题在头部平行显示。</p>
+                            <p>页面布局测试通过！</p>
+                        </div>
+                    </div>
+                </main>
+            `;
+        }
+
+        // 辅助函数
+        function getTestFileIcon(extension) {
+            const iconMap = {
+                '.pdf': '📄',
+                '.txt': '📝',
+                '.doc': '📄',
+                '.docx': '📄',
+                '.wps': '📄'
+            };
+            return iconMap[extension] || '📄';
+        }
+
+        function formatTestFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 轮播控制（模拟）
+        function nextSlide(type) {
+            console.log('下一张:', type);
+        }
+
+        function prevSlide(type) {
+            console.log('上一张:', type);
+        }
+
+        // 初始化
+        window.addEventListener('load', function() {
+            console.log('测试页面已加载，可以测试所有功能');
+        });
+    </script>
+</body>
+</html>
