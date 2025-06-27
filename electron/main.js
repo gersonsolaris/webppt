@@ -120,10 +120,14 @@ function createWindow() {
   // 监听全屏状态变化
   mainWindow.on('enter-full-screen', () => {
     console.log('进入全屏模式');
+    // 隐藏菜单栏
+    Menu.setApplicationMenu(null);
   });
 
   mainWindow.on('leave-full-screen', () => {
     console.log('退出全屏模式');
+    // 恢复菜单栏
+    createMenu();
   });
 
   // 设置窗口标题
@@ -198,20 +202,12 @@ function createMenu() {
         },
         { type: 'separator' },
         {
-          label: '进入全屏',
-          accelerator: 'Ctrl+Shift+F',
+          label: mainWindow && mainWindow.isFullScreen() ? '退出全屏' : '进入全屏',
+          accelerator: mainWindow && mainWindow.isFullScreen() ? 'Ctrl+Shift+Q' : 'Ctrl+Shift+F',
           click: () => {
             if (mainWindow) {
-              mainWindow.setFullScreen(true);
-            }
-          }
-        },
-        {
-          label: '退出全屏',
-          accelerator: 'Ctrl+Shift+Q',
-          click: () => {
-            if (mainWindow) {
-              mainWindow.setFullScreen(false);
+              const isFullScreen = mainWindow.isFullScreen();
+              mainWindow.setFullScreen(!isFullScreen);
             }
           }
         },
